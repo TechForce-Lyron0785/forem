@@ -34805,15 +34805,27 @@ function hasMergeConflicts(str) {
 function parse(str, fileLoc) {
   const parser = new Parser(str, fileLoc);
   parser.next();
-  try {
-    return parser.parse();
-  } catch (error1) {
+
+  if (!fileLoc.endsWith(`.yml`)) {
     try {
-      return safeLoad(str, {
-        schema: FAILSAFE_SCHEMA
-      });
-    } catch (error2) {
-      throw error1;
+      return parser.parse();
+    } catch (error1) {
+      try {
+        return safeLoad(str, {
+          schema: FAILSAFE_SCHEMA
+        });
+      } catch (error2) {
+        throw error1;
+      }
+    }
+  } else {
+    const result = safeLoad(str, {
+      schema: FAILSAFE_SCHEMA
+    });
+    if (typeof result === 'object') {
+      return result;
+    } else {
+      return {};
     }
   }
 }
@@ -46666,7 +46678,7 @@ function mkdirfix (name, opts, cb) {
 /* 194 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"yarn","installationMethod":"unknown","version":"1.21.1","license":"BSD-2-Clause","preferGlobal":true,"description":"📦🐈 Fast, reliable, and secure dependency management.","dependencies":{"@zkochan/cmd-shim":"^3.1.0","babel-runtime":"^6.26.0","bytes":"^3.0.0","camelcase":"^4.0.0","chalk":"^2.1.0","cli-table3":"^0.4.0","commander":"^2.9.0","death":"^1.0.0","debug":"^3.0.0","deep-equal":"^1.0.1","detect-indent":"^5.0.0","dnscache":"^1.0.1","glob":"^7.1.1","gunzip-maybe":"^1.4.0","hash-for-dep":"^1.2.3","imports-loader":"^0.8.0","ini":"^1.3.4","inquirer":"^6.2.0","invariant":"^2.2.0","is-builtin-module":"^2.0.0","is-ci":"^1.0.10","is-webpack-bundle":"^1.0.0","js-yaml":"^3.13.1","leven":"^2.0.0","loud-rejection":"^1.2.0","micromatch":"^2.3.11","mkdirp":"^0.5.1","node-emoji":"^1.6.1","normalize-url":"^2.0.0","npm-logical-tree":"^1.2.1","object-path":"^0.11.2","proper-lockfile":"^2.0.0","puka":"^1.0.0","read":"^1.0.7","request":"^2.87.0","request-capture-har":"^1.2.2","rimraf":"^2.5.0","semver":"^5.1.0","ssri":"^5.3.0","strip-ansi":"^4.0.0","strip-bom":"^3.0.0","tar-fs":"^1.16.0","tar-stream":"^1.6.1","uuid":"^3.0.1","v8-compile-cache":"^2.0.0","validate-npm-package-license":"^3.0.4","yn":"^2.0.0"},"devDependencies":{"babel-core":"^6.26.0","babel-eslint":"^7.2.3","babel-loader":"^6.2.5","babel-plugin-array-includes":"^2.0.3","babel-plugin-inline-import":"^3.0.0","babel-plugin-transform-builtin-extend":"^1.1.2","babel-plugin-transform-inline-imports-commonjs":"^1.0.0","babel-plugin-transform-runtime":"^6.4.3","babel-preset-env":"^1.6.0","babel-preset-flow":"^6.23.0","babel-preset-stage-0":"^6.0.0","babylon":"^6.5.0","commitizen":"^2.9.6","cz-conventional-changelog":"^2.0.0","eslint":"^4.3.0","eslint-config-fb-strict":"^22.0.0","eslint-plugin-babel":"^5.0.0","eslint-plugin-flowtype":"^2.35.0","eslint-plugin-jasmine":"^2.6.2","eslint-plugin-jest":"^21.0.0","eslint-plugin-jsx-a11y":"^6.0.2","eslint-plugin-prefer-object-spread":"^1.2.1","eslint-plugin-prettier":"^2.1.2","eslint-plugin-react":"^7.1.0","eslint-plugin-relay":"^0.0.28","eslint-plugin-yarn-internal":"file:scripts/eslint-rules","execa":"^0.11.0","fancy-log":"^1.3.2","flow-bin":"^0.66.0","git-release-notes":"^3.0.0","gulp":"^4.0.0","gulp-babel":"^7.0.0","gulp-if":"^2.0.1","gulp-newer":"^1.0.0","gulp-plumber":"^1.0.1","gulp-sourcemaps":"^2.2.0","jest":"^22.4.4","jsinspect":"^0.12.6","minimatch":"^3.0.4","mock-stdin":"^0.3.0","prettier":"^1.5.2","string-replace-loader":"^2.1.1","temp":"^0.8.3","webpack":"^2.1.0-beta.25","yargs":"^6.3.0"},"resolutions":{"sshpk":"^1.14.2"},"engines":{"node":">=4.0.0"},"repository":"yarnpkg/yarn","bin":{"yarn":"./bin/yarn.js","yarnpkg":"./bin/yarn.js"},"scripts":{"build":"gulp build","build-bundle":"node ./scripts/build-webpack.js","build-chocolatey":"powershell ./scripts/build-chocolatey.ps1","build-deb":"./scripts/build-deb.sh","build-dist":"bash ./scripts/build-dist.sh","build-win-installer":"scripts\\build-windows-installer.bat","changelog":"git-release-notes $(git describe --tags --abbrev=0 $(git describe --tags --abbrev=0)^)..$(git describe --tags --abbrev=0) scripts/changelog.md","dupe-check":"yarn jsinspect ./src","lint":"eslint . && flow check","pkg-tests":"yarn --cwd packages/pkg-tests jest yarn.test.js","prettier":"eslint src __tests__ --fix","release-branch":"./scripts/release-branch.sh","test":"yarn lint && yarn test-only","test-only":"node --max_old_space_size=4096 node_modules/jest/bin/jest.js --verbose","test-only-debug":"node --inspect-brk --max_old_space_size=4096 node_modules/jest/bin/jest.js --runInBand --verbose","test-coverage":"node --max_old_space_size=4096 node_modules/jest/bin/jest.js --coverage --verbose","watch":"gulp watch","commit":"git-cz"},"jest":{"collectCoverageFrom":["src/**/*.js"],"testEnvironment":"node","modulePathIgnorePatterns":["__tests__/fixtures/","packages/pkg-tests/pkg-tests-fixtures","dist/"],"testPathIgnorePatterns":["__tests__/(fixtures|__mocks__)/","updates/","_(temp|mock|install|init|helpers).js$","packages/pkg-tests"]},"config":{"commitizen":{"path":"./node_modules/cz-conventional-changelog"}}}
+module.exports = {"name":"yarn","installationMethod":"unknown","version":"1.22.4","license":"BSD-2-Clause","preferGlobal":true,"description":"📦🐈 Fast, reliable, and secure dependency management.","dependencies":{"@zkochan/cmd-shim":"^3.1.0","babel-runtime":"^6.26.0","bytes":"^3.0.0","camelcase":"^4.0.0","chalk":"^2.1.0","cli-table3":"^0.4.0","commander":"^2.9.0","death":"^1.0.0","debug":"^3.0.0","deep-equal":"^1.0.1","detect-indent":"^5.0.0","dnscache":"^1.0.1","glob":"^7.1.1","gunzip-maybe":"^1.4.0","hash-for-dep":"^1.2.3","imports-loader":"^0.8.0","ini":"^1.3.4","inquirer":"^6.2.0","invariant":"^2.2.0","is-builtin-module":"^2.0.0","is-ci":"^1.0.10","is-webpack-bundle":"^1.0.0","js-yaml":"^3.13.1","leven":"^2.0.0","loud-rejection":"^1.2.0","micromatch":"^2.3.11","mkdirp":"^0.5.1","node-emoji":"^1.6.1","normalize-url":"^2.0.0","npm-logical-tree":"^1.2.1","object-path":"^0.11.2","proper-lockfile":"^2.0.0","puka":"^1.0.0","read":"^1.0.7","request":"^2.87.0","request-capture-har":"^1.2.2","rimraf":"^2.5.0","semver":"^5.1.0","ssri":"^5.3.0","strip-ansi":"^4.0.0","strip-bom":"^3.0.0","tar-fs":"^1.16.0","tar-stream":"^1.6.1","uuid":"^3.0.1","v8-compile-cache":"^2.0.0","validate-npm-package-license":"^3.0.4","yn":"^2.0.0"},"devDependencies":{"babel-core":"^6.26.0","babel-eslint":"^7.2.3","babel-loader":"^6.2.5","babel-plugin-array-includes":"^2.0.3","babel-plugin-inline-import":"^3.0.0","babel-plugin-transform-builtin-extend":"^1.1.2","babel-plugin-transform-inline-imports-commonjs":"^1.0.0","babel-plugin-transform-runtime":"^6.4.3","babel-preset-env":"^1.6.0","babel-preset-flow":"^6.23.0","babel-preset-stage-0":"^6.0.0","babylon":"^6.5.0","commitizen":"^2.9.6","cz-conventional-changelog":"^2.0.0","eslint":"^4.3.0","eslint-config-fb-strict":"^22.0.0","eslint-plugin-babel":"^5.0.0","eslint-plugin-flowtype":"^2.35.0","eslint-plugin-jasmine":"^2.6.2","eslint-plugin-jest":"^21.0.0","eslint-plugin-jsx-a11y":"^6.0.2","eslint-plugin-prefer-object-spread":"^1.2.1","eslint-plugin-prettier":"^2.1.2","eslint-plugin-react":"^7.1.0","eslint-plugin-relay":"^0.0.28","eslint-plugin-yarn-internal":"file:scripts/eslint-rules","execa":"^0.11.0","fancy-log":"^1.3.2","flow-bin":"^0.66.0","git-release-notes":"^3.0.0","gulp":"^4.0.0","gulp-babel":"^7.0.0","gulp-if":"^2.0.1","gulp-newer":"^1.0.0","gulp-plumber":"^1.0.1","gulp-sourcemaps":"^2.2.0","jest":"^22.4.4","jsinspect":"^0.12.6","minimatch":"^3.0.4","mock-stdin":"^0.3.0","prettier":"^1.5.2","string-replace-loader":"^2.1.1","temp":"^0.8.3","webpack":"^2.1.0-beta.25","yargs":"^6.3.0"},"resolutions":{"sshpk":"^1.14.2"},"engines":{"node":">=4.0.0"},"repository":"yarnpkg/yarn","bin":{"yarn":"./bin/yarn.js","yarnpkg":"./bin/yarn.js"},"scripts":{"build":"gulp build","build-bundle":"node ./scripts/build-webpack.js","build-chocolatey":"powershell ./scripts/build-chocolatey.ps1","build-deb":"./scripts/build-deb.sh","build-dist":"bash ./scripts/build-dist.sh","build-win-installer":"scripts\\build-windows-installer.bat","changelog":"git-release-notes $(git describe --tags --abbrev=0 $(git describe --tags --abbrev=0)^)..$(git describe --tags --abbrev=0) scripts/changelog.md","dupe-check":"yarn jsinspect ./src","lint":"eslint . && flow check","pkg-tests":"yarn --cwd packages/pkg-tests jest yarn.test.js","prettier":"eslint src __tests__ --fix","release-branch":"./scripts/release-branch.sh","test":"yarn lint && yarn test-only","test-only":"node --max_old_space_size=4096 node_modules/jest/bin/jest.js --verbose","test-only-debug":"node --inspect-brk --max_old_space_size=4096 node_modules/jest/bin/jest.js --runInBand --verbose","test-coverage":"node --max_old_space_size=4096 node_modules/jest/bin/jest.js --coverage --verbose","watch":"gulp watch","commit":"git-cz"},"jest":{"collectCoverageFrom":["src/**/*.js"],"testEnvironment":"node","modulePathIgnorePatterns":["__tests__/fixtures/","packages/pkg-tests/pkg-tests-fixtures","dist/"],"testPathIgnorePatterns":["__tests__/(fixtures|__mocks__)/","updates/","_(temp|mock|install|init|helpers).js$","packages/pkg-tests"]},"config":{"commitizen":{"path":"./node_modules/cz-conventional-changelog"}}}
 
 /***/ }),
 /* 195 */
@@ -69876,12 +69888,12 @@ function getRcConfigForFolder(cwd) {
 }
 
 function loadRcFile(fileText, filePath) {
-  var _parse = (0, (_lockfile || _load_lockfile()).parse)(fileText, 'yarnrc');
+  var _parse = (0, (_lockfile || _load_lockfile()).parse)(fileText, filePath);
 
   let values = _parse.object;
 
 
-  if (filePath.match(/\.yml$/)) {
+  if (filePath.match(/\.yml$/) && typeof values.yarnPath === 'string') {
     values = { 'yarn-path': values.yarnPath };
   }
 
@@ -74848,7 +74860,20 @@ let run = exports.run = (() => {
         } else {
           let suggestion;
 
-          for (const commandName in scripts) {
+          for (var _iterator9 = scripts.keys(), _isArray9 = Array.isArray(_iterator9), _i9 = 0, _iterator9 = _isArray9 ? _iterator9 : _iterator9[Symbol.iterator]();;) {
+            var _ref16;
+
+            if (_isArray9) {
+              if (_i9 >= _iterator9.length) break;
+              _ref16 = _iterator9[_i9++];
+            } else {
+              _i9 = _iterator9.next();
+              if (_i9.done) break;
+              _ref16 = _i9.value;
+            }
+
+            const commandName = _ref16;
+
             const steps = leven(commandName, action);
             if (steps < 2) {
               suggestion = commandName;
@@ -74933,19 +74958,19 @@ let run = exports.run = (() => {
 
       const printedCommands = new Map();
 
-      for (var _iterator9 = pkgCommands, _isArray9 = Array.isArray(_iterator9), _i9 = 0, _iterator9 = _isArray9 ? _iterator9 : _iterator9[Symbol.iterator]();;) {
-        var _ref16;
+      for (var _iterator10 = pkgCommands, _isArray10 = Array.isArray(_iterator10), _i10 = 0, _iterator10 = _isArray10 ? _iterator10 : _iterator10[Symbol.iterator]();;) {
+        var _ref17;
 
-        if (_isArray9) {
-          if (_i9 >= _iterator9.length) break;
-          _ref16 = _iterator9[_i9++];
+        if (_isArray10) {
+          if (_i10 >= _iterator10.length) break;
+          _ref17 = _iterator10[_i10++];
         } else {
-          _i9 = _iterator9.next();
-          if (_i9.done) break;
-          _ref16 = _i9.value;
+          _i10 = _iterator10.next();
+          if (_i10.done) break;
+          _ref17 = _i10.value;
         }
 
-        const pkgCommand = _ref16;
+        const pkgCommand = _ref17;
 
         const action = scripts.get(pkgCommand);
         invariant(action, 'Action must exists');
@@ -76076,6 +76101,11 @@ class TarballFetcher extends (_baseFetcher || _load_baseFetcher()).default {
       chown: false, // don't chown. just leave as it is
       map: header => {
         header.mtime = now;
+        if (header.linkname) {
+          const basePath = path.posix.dirname(path.join('/', header.name));
+          const jailPath = path.posix.join(basePath, header.linkname);
+          header.linkname = path.posix.relative('/', jailPath);
+        }
         return header;
       },
       fs: patchedFs
@@ -78409,6 +78439,11 @@ class RequestManager {
       rejectNext(err);
     };
 
+    const rejectWithoutUrl = function rejectWithoutUrl(err) {
+      err.message = err.message;
+      rejectNext(err);
+    };
+
     const queueForRetry = reason => {
       const attempts = params.retryAttempts || 0;
       if (attempts >= this.maxRetryAttempts - 1) {
@@ -78462,6 +78497,11 @@ class RequestManager {
           } else {
             return;
           }
+        }
+
+        if (res.statusCode === 401 && res.caseless && res.caseless.get('server') === 'GitHub.com') {
+          const message = `${res.body.message}. If using GITHUB_TOKEN in your env, check that it is valid.`;
+          rejectWithoutUrl(new Error(this.reporter.lang('unauthorizedResponse', res.caseless.get('server'), message)));
         }
 
         if (res.statusCode === 401 && res.headers['www-authenticate']) {
@@ -96966,12 +97006,14 @@ function _load_asyncToGenerator() {
 
 let run = exports.run = (() => {
   var _ref = (0, (_asyncToGenerator2 || _load_asyncToGenerator()).default)(function* (config, reporter, flags, args) {
-    if (flags.install) {
+    const installVersion = flags[`2`] ? `berry` : flags.install;
+
+    if (installVersion) {
       const lockfilePath = path.resolve(config.cwd, 'yarn.lock');
       if (!(yield (_fs || _load_fs()).exists(lockfilePath))) {
         yield (_fs || _load_fs()).writeFile(lockfilePath, '');
       }
-      yield (_child || _load_child()).spawn((_constants || _load_constants()).NODE_BIN_PATH, [process.argv[1], 'policies', 'set-version', flags.install], {
+      yield (_child || _load_child()).spawn((_constants || _load_constants()).NODE_BIN_PATH, [process.argv[1], 'policies', 'set-version', installVersion], {
         stdio: 'inherit',
         cwd: config.cwd
       });
@@ -97266,6 +97308,7 @@ function setFlags(commander) {
   commander.option('-y, --yes', 'use default options');
   commander.option('-p, --private', 'use default options and private true');
   commander.option('-i, --install <value>', 'install a specific Yarn release');
+  commander.option('-2', 'generates the project using Yarn 2');
 }
 
 function hasWrapper(commander, args) {
@@ -98254,6 +98297,7 @@ var _buildSubCommands = (0, (_buildSubCommands2 || _load_buildSubCommands()).def
 
       let bundleUrl;
       let bundleVersion;
+      let isV2 = false;
 
       if (range === 'nightly' || range === 'nightlies') {
         bundleUrl = 'https://nightly.yarnpkg.com/latest.js';
@@ -98261,10 +98305,18 @@ var _buildSubCommands = (0, (_buildSubCommands2 || _load_buildSubCommands()).def
       } else if (range === 'berry' || range === 'v2' || range === '2') {
         bundleUrl = 'https://github.com/yarnpkg/berry/raw/master/packages/berry-cli/bin/berry.js';
         bundleVersion = 'berry';
+        isV2 = true;
       } else {
-        const releases = yield fetchReleases(config, {
-          includePrereleases: allowRc
-        });
+        let releases = [];
+
+        try {
+          releases = yield fetchReleases(config, {
+            includePrereleases: allowRc
+          });
+        } catch (e) {
+          reporter.error(e.message);
+          return;
+        }
 
         const release = releases.find(function (release) {
           // $FlowFixMe
@@ -98285,7 +98337,6 @@ var _buildSubCommands = (0, (_buildSubCommands2 || _load_buildSubCommands()).def
       reporter.log(`Downloading ${chalk.green(bundleUrl)}...`);
 
       const bundle = yield fetchBundle(config, bundleUrl);
-      const rc = (0, (_rc || _load_rc()).getRcConfigForFolder)(config.lockfileFolder);
 
       const yarnPath = path.resolve(config.lockfileFolder, `.yarn/releases/yarn-${bundleVersion}.js`);
       reporter.log(`Saving it into ${chalk.magenta(yarnPath)}...`);
@@ -98293,10 +98344,22 @@ var _buildSubCommands = (0, (_buildSubCommands2 || _load_buildSubCommands()).def
       yield (_fs || _load_fs()).writeFile(yarnPath, bundle);
       yield (_fs || _load_fs()).chmod(yarnPath, 0o755);
 
-      const rcPath = `${config.lockfileFolder}/.yarnrc`;
-      reporter.log(`Updating ${chalk.magenta(rcPath)}...`);
-      rc['yarn-path'] = path.relative(config.lockfileFolder, yarnPath);
-      yield (_fs || _load_fs()).writeFilePreservingEol(rcPath, `${(0, (_lockfile || _load_lockfile()).stringify)(rc)}\n`);
+      const targetPath = path.relative(config.lockfileFolder, yarnPath).replace(/\\/g, '/');
+
+      if (isV2) {
+        const rcPath = `${config.lockfileFolder}/.yarnrc.yml`;
+        reporter.log(`Updating ${chalk.magenta(rcPath)}...`);
+
+        yield (_fs || _load_fs()).writeFilePreservingEol(rcPath, `yarnPath: ${JSON.stringify(targetPath)}\n`);
+      } else {
+        const rcPath = `${config.lockfileFolder}/.yarnrc`;
+        reporter.log(`Updating ${chalk.magenta(rcPath)}...`);
+
+        const rc = (0, (_rc || _load_rc()).getRcConfigForFolder)(config.lockfileFolder);
+        rc['yarn-path'] = targetPath;
+
+        yield (_fs || _load_fs()).writeFilePreservingEol(rcPath, `${(0, (_lockfile || _load_lockfile()).stringify)(rc)}\n`);
+      }
 
       reporter.log(`Done!`);
     })();
@@ -99619,11 +99682,11 @@ let run = exports.run = (() => {
       throw new (_errors || _load_errors()).MessageError(reporter.lang('workspaceRootNotFound', config.cwd));
     }
 
-    if (flags.originalArgs < 1) {
+    if (args.length < 1) {
       throw new (_errors || _load_errors()).MessageError(reporter.lang('workspaceMissingWorkspace'));
     }
 
-    if (flags.originalArgs < 2) {
+    if (args.length < 2) {
       throw new (_errors || _load_errors()).MessageError(reporter.lang('workspaceMissingCommand'));
     }
 
@@ -99632,7 +99695,7 @@ let run = exports.run = (() => {
 
     const workspaces = yield config.resolveWorkspaces(workspaceRootFolder, manifest);
 
-    var _ref2 = flags.originalArgs || [];
+    var _ref2 = args || [];
 
     const workspaceName = _ref2[0],
           rest = _ref2.slice(1);
@@ -99818,28 +99881,23 @@ let runScript = exports.runScript = (() => {
     const workspaces = yield config.resolveWorkspaces(workspaceRootFolder, manifest);
 
     try {
-      var _ref6 = flags.originalArgs || [];
-
-      const _ = _ref6[0],
-            rest = _ref6.slice(1);
-
       for (var _iterator4 = Object.keys(workspaces), _isArray4 = Array.isArray(_iterator4), _i4 = 0, _iterator4 = _isArray4 ? _iterator4 : _iterator4[Symbol.iterator]();;) {
-        var _ref7;
+        var _ref6;
 
         if (_isArray4) {
           if (_i4 >= _iterator4.length) break;
-          _ref7 = _iterator4[_i4++];
+          _ref6 = _iterator4[_i4++];
         } else {
           _i4 = _iterator4.next();
           if (_i4.done) break;
-          _ref7 = _i4.value;
+          _ref6 = _i4.value;
         }
 
-        const workspaceName = _ref7;
+        const workspaceName = _ref6;
         const loc = workspaces[workspaceName].loc;
 
         reporter.log(`${os.EOL}> ${workspaceName}`);
-        yield (_child || _load_child()).spawn((_constants2 || _load_constants2()).NODE_BIN_PATH, [(_constants2 || _load_constants2()).YARN_BIN_PATH, ...rest], {
+        yield (_child || _load_child()).spawn((_constants2 || _load_constants2()).NODE_BIN_PATH, [(_constants2 || _load_constants2()).YARN_BIN_PATH, 'run', ...args], {
           stdio: 'inherit',
           cwd: loc
         });
@@ -100059,7 +100117,11 @@ let main = exports.main = (() => {
       commandName = 'install';
       isKnownCommand = true;
     }
-
+    if (commandName === 'set' && args[0] === 'version') {
+      commandName = 'policies';
+      args.splice(0, 1, 'set-version');
+      isKnownCommand = true;
+    }
     if (!isKnownCommand) {
       // if command is not recognized, then set default to `run`
       args.unshift(commandName);
@@ -100070,15 +100132,20 @@ let main = exports.main = (() => {
     let warnAboutRunDashDash = false;
     // we are using "yarn <script> -abc", "yarn run <script> -abc", or "yarn node -abc", we want -abc
     // to be script options, not yarn options
-    const PROXY_COMMANDS = new Set([`run`, `create`, `node`]);
-    if (PROXY_COMMANDS.has(commandName)) {
+
+    // PROXY_COMMANDS is a map of command name to the number of preservedArgs
+    const PROXY_COMMANDS = {
+      run: 1, // yarn run {command}
+      create: 1, // yarn create {project}
+      node: 0, // yarn node
+      workspaces: 1, // yarn workspaces {command}
+      workspace: 2 // yarn workspace {package} {command}
+    };
+    if (PROXY_COMMANDS.hasOwnProperty(commandName)) {
       if (endArgs.length === 0) {
-        let preservedArgs = 0;
-        // the "run" and "create" command take one argument that we want to parse as usual (the
-        // script/package name), hence the splice(1)
-        if (command === (_index3 || _load_index3()).default.run || command === (_index3 || _load_index3()).default.create) {
-          preservedArgs += 1;
-        }
+        // $FlowFixMe doesn't like that PROXY_COMMANDS doesn't have keys for all commands.
+        let preservedArgs = PROXY_COMMANDS[commandName];
+
         // If the --into option immediately follows the command (or the script name in the "run/create"
         // case), we parse them as regular options so that we can cd into them
         if (args[preservedArgs] === `--into`) {
@@ -100090,7 +100157,6 @@ let main = exports.main = (() => {
       }
     }
 
-    (_commander || _load_commander()).default.originalArgs = args;
     args = [...preCommandArgs, ...args];
 
     command.setFlags((_commander || _load_commander()).default);
@@ -100531,6 +100597,11 @@ let start = (() => {
       const argv = process.argv.slice(2);
       const opts = { stdio: 'inherit', env: Object.assign({}, process.env, { YARN_IGNORE_PATH: 1 }) };
       let exitCode = 0;
+
+      process.on(`SIGINT`, function () {
+        // We don't want SIGINT to kill our process; we want it to kill the
+        // innermost process, whose end will cause our own to exit.
+      });
 
       try {
         if (yarnPath.endsWith(`.js`)) {
@@ -104923,6 +104994,7 @@ const messages = {
   errorExtractingTarball: 'Extracting tar content of $1 failed, the file appears to be corrupt: $0',
   updateInstalling: 'Installing $0...',
   hostedGitResolveError: 'Error connecting to repository. Please, check the url.',
+  unauthorizedResponse: 'Received a 401 from $0. $1',
 
   unknownFetcherFor: 'Unknown fetcher for $0',
 
@@ -106797,7 +106869,7 @@ const semver = __webpack_require__(22);
 const path = __webpack_require__(0);
 const url = __webpack_require__(24);
 
-const VALID_BIN_KEYS = /^[a-z0-9_-]+$/i;
+const VALID_BIN_KEYS = /^(?!\.{0,2}$)[a-z0-9._-]+$/i;
 
 const LICENSE_RENAMES = {
   'MIT/X11': 'MIT',
@@ -107660,7 +107732,11 @@ function parseRcPaths(paths, parser) {
     try {
       return parser((0, (_fs || _load_fs()).readFileSync)(path).toString(), path);
     } catch (error) {
-      return {};
+      if (error.code === 'ENOENT' || error.code === 'EISDIR') {
+        return {};
+      } else {
+        throw error;
+      }
     }
   }));
 }
