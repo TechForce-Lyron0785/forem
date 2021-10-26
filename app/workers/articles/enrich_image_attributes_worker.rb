@@ -1,5 +1,5 @@
 module Articles
-  class DetectAnimatedImagesWorker
+  class EnrichImageAttributesWorker
     include Sidekiq::Worker
 
     sidekiq_options queue: :medium_priority, retry: 5, lock: :until_executing
@@ -8,7 +8,7 @@ module Articles
       article = Article.find_by(id: article_id)
       return unless article
 
-      detected = Articles::DetectAnimatedImages.call(article)
+      detected = Articles::EnrichImageAttributes.call(article)
       return unless detected
 
       EdgeCache::BustArticle.call(article)

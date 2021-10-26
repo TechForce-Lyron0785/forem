@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Articles::DetectAnimatedImagesWorker, type: :worker do
+RSpec.describe Articles::EnrichImageAttributesWorker, type: :worker do
   include_examples "#enqueues_on_correct_queue", "medium_priority", 1
 
   describe "#perform" do
@@ -15,29 +15,29 @@ RSpec.describe Articles::DetectAnimatedImagesWorker, type: :worker do
         allow(EdgeCache::BustArticle).to receive(:call).with(article)
       end
 
-      it "calls only Articles::DetectAnimatedImages", :aggregate_failures do
-        allow(Articles::DetectAnimatedImages).to receive(:call).with(article).and_return(false)
+      it "calls only Articles::EnrichImageAttributes", :aggregate_failures do
+        allow(Articles::EnrichImageAttributes).to receive(:call).with(article).and_return(false)
 
         worker.perform(article_id)
 
-        expect(Articles::DetectAnimatedImages).to have_received(:call).with(article)
+        expect(Articles::EnrichImageAttributes).to have_received(:call).with(article)
         expect(EdgeCache::BustArticle).not_to have_received(:call).with(article)
       end
 
-      it "calls both Articles::DetectAnimatedImages and EdgeCache::BustArticle if an animated image is detected",
+      it "calls both Articles::EnrichImageAttributes and EdgeCache::BustArticle if an animated image is detected",
          :aggregate_failures do
-        allow(Articles::DetectAnimatedImages).to receive(:call).with(article).and_return(true)
+        allow(Articles::EnrichImageAttributes).to receive(:call).with(article).and_return(true)
 
         worker.perform(article_id)
 
-        expect(Articles::DetectAnimatedImages).to have_received(:call).with(article)
+        expect(Articles::EnrichImageAttributes).to have_received(:call).with(article)
         expect(EdgeCache::BustArticle).to have_received(:call).with(article)
       end
     end
 
     context "without article" do
       before do
-        allow(Articles::DetectAnimatedImages).to receive(:call).and_return(true)
+        allow(Articles::EnrichImageAttributes).to receive(:call).and_return(true)
         allow(EdgeCache::BustArticle).to receive(:call)
       end
 
@@ -45,10 +45,10 @@ RSpec.describe Articles::DetectAnimatedImagesWorker, type: :worker do
         expect { worker.perform(nil) }.not_to raise_error
       end
 
-      it "does not call Articles::DetectAnimatedImages" do
+      it "does not call Articles::EnrichImageAttributes" do
         worker.perform(nil)
 
-        expect(Articles::DetectAnimatedImages).not_to have_received(:call)
+        expect(Articles::EnrichImageAttributes).not_to have_received(:call)
       end
 
       it "does not call EdgeCache::BustArticle" do
