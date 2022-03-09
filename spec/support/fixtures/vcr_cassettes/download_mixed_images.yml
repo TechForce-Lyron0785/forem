@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://res.cloudinary.com/practicaldev/image/fetch/s--8UJyrLKU--/c_limit,f_auto,fl_progressive,q_auto,w_880/https://via.placeholder.com/350x150
+    uri: https://via.placeholder.com/350x150
     body:
       encoding: US-ASCII
       string: ''
@@ -55,7 +55,7 @@ http_interactions:
   recorded_at: Fri, 22 Oct 2021 22:30:29 GMT
 - request:
     method: get
-    uri: https://res.cloudinary.com/practicaldev/image/fetch/s--8UJyrLKU--/c_limit,f_auto,fl_progressive,q_auto,w_880/https://via.placeholder.com/350x150
+    uri: https://via.placeholder.com/350x150
     body:
       encoding: US-ASCII
       string: ''
