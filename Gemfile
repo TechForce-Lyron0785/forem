@@ -70,7 +70,7 @@ gem "omniauth", "~> 2.1" # A generalized Rack framework for multiple-provider au
 gem "omniauth-apple", "~> 1.0" # OmniAuth strategy for Sign In with Apple
 gem "omniauth-facebook", "~> 9.0" # OmniAuth strategy for Facebook
 gem "omniauth-github", "~> 2.0" # OmniAuth strategy for GitHub
-gem "omniauth-google-oauth2", "~> 1.0" # OmniAuth strategy for Google OAuth2
+gem "omniauth-google-oauth2", "~> 1.2" # OmniAuth strategy for Google OAuth2
 gem "omniauth-mlh", "~> 4.1"
 gem "omniauth-rails_csrf_protection", "~> 1.0" # Provides CSRF protection on OmniAuth request endpoint on Rails application.
 gem "omniauth-twitter", "~> 1.4" # OmniAuth strategy for Twitter
