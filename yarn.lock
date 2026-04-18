@@ -3462,7 +3462,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/preact@npm:8.6.15, @storybook/preact@npm:^8.6.15":
+"@storybook/preact@npm:8.6.15":
   version: 8.6.15
   resolution: "@storybook/preact@npm:8.6.15"
   dependencies:
@@ -3476,6 +3476,19 @@ __metadata:
     preact: ^8.0.0||^10.0.0
     storybook: ^8.6.15
   checksum: 10c0/fe054c93089de827fe7810e5044ed4600ff39804b555810cb600c45c13fd6e9cb7205f5bd17491add58676718fd8acc967a95c9171fb66941c70f401883580f2
+  languageName: node
+  linkType: hard
+
+"@storybook/preact@npm:^10.3.5":
+  version: 10.3.5
+  resolution: "@storybook/preact@npm:10.3.5"
+  dependencies:
+    "@storybook/global": "npm:^5.0.0"
+    ts-dedent: "npm:^2.0.0"
+  peerDependencies:
+    preact: ^8.0.0||^10.0.0
+    storybook: ^10.3.5
+  checksum: 10c0/a3c36f97f5c5ded2151f2382221e3be412af9880e5e24307d3d80c65c38885d033af2751143524117f01cb64a981b98580b07220d224a50c8950161eafbc33c0
   languageName: node
   linkType: hard
 
@@ -7002,7 +7015,7 @@ __metadata:
     "@storybook/addon-controls": "npm:^8.6.15"
     "@storybook/addon-docs": "npm:^8.6.15"
     "@storybook/addon-storysource": "npm:^8.6.18"
-    "@storybook/preact": "npm:^8.6.15"
+    "@storybook/preact": "npm:^10.3.5"
     "@storybook/preact-webpack5": "npm:^8.6.15"
     "@testing-library/cypress": "npm:^8.0.3"
     "@testing-library/dom": "npm:^8.20.1"
